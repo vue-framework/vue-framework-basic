@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-import App from './components/bas-input-tree.vue'
-// import elcomponents from '@elcomponents'
-import elcomponents from '../lib/elcomponents.min.js'
+import '../packages/style/normalize.css'
+import '../packages/style/constant.less'
+import App from './App.vue'
+import layout from '@layout'
+// import elcomponents from '../lib/elcomponents.min.js'
 Vue.use(ElementUI)
-Vue.use(elcomponents)
+Vue.use(layout)
 const a = new Vue({
   el: '#app',
   render: h => h(App)
