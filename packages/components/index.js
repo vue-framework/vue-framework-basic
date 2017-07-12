@@ -7,7 +7,7 @@ const components = [
   ElInputTree
 ]
 
-const install = function (Vue, opts = {}) {
+const install = function (Vue) {
   if (install.installed) return
   components.map(component => {
     component.install(Vue)

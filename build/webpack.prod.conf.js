@@ -11,7 +11,7 @@ function getProdWebpackConfig (config) {
     module: {
       rules: utils.styleLoaders({
         sourceMap: false,
-        extract: config.build.extractCss
+        extractCss: config.build.extractCss
       })
     },
     devtool: false,
@@ -30,7 +30,7 @@ function getProdWebpackConfig (config) {
         cssProcessorOptions: {
           safe: true
         }
-      }),,
+      }),
       // 导包module到vendor
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
@@ -68,13 +68,12 @@ function getProdWebpackConfig (config) {
     var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
     webpackConfig.plugins.push(new BundleAnalyzerPlugin())
   }
-  // 导出为css文件
+  // 导出css
   if (config.build.extractCss) {
     webpackConfig.plugins.push(new ExtractTextPlugin({
       filename: 'css/[name].[contenthash].css'
     }))
   }
-
   // 复制静态文件
   if (config.common.static) {
     webpackConfig.plugins.push(new CopyWebpackPlugin([
@@ -92,6 +91,7 @@ function getProdWebpackConfig (config) {
       chunks: ['vendor']
     }))
   }
+  return webpackConfig
 }
 
 module.exports = getProdWebpackConfig

@@ -55,13 +55,14 @@ export default {
       // 保证 this.$el 已经插入文档
       this.$refs.editor.id = this.id
       let config = Object.assign(this.defaultConfig, this.config)
-      this.editor = UE.getEditor(this.id, config)
+      this.editor = window.UE.getEditor(this.id, config)
       this.editor.ready(function f2 () {
         this.editor.setContent(this.value)
         this.editor.addListener('contentChange', function () {
           const wordCount = this.editor.getContentLength(true)
           const content = this.editor.getContent()
           const plainTxt = this.editor.getPlainTxt()
+          console.log(wordCount, plainTxt)
           this.$emit('input', content)
         }.bind(this))
 

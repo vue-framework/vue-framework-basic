@@ -18,7 +18,7 @@ function getBaseWebpackConfig (config) {
         {
           test: /\.vue$/,
           loader: 'vue-loader',
-          options: vueLoaderConfig
+          options: vueLoaderConfig(config.build.extractCss)
         },
         {
           test: /\.js$/,
@@ -30,7 +30,7 @@ function getBaseWebpackConfig (config) {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: path.posix.join(config.common.static, 'img/[name].[hash:7].[ext]')
+            name: path.posix.join(config.common.static || 'static', 'img/[name].[hash:7].[ext]')
           }
         },
         {
@@ -38,7 +38,7 @@ function getBaseWebpackConfig (config) {
           loader: 'url-loader',
           options: {
             limit: 10000,
-            name: path.posix.join(config.common.static, 'fonts/[name].[hash:7].[ext]')
+            name: path.posix.join(config.common.static || 'static', 'fonts/[name].[hash:7].[ext]')
           }
         }
       ]
@@ -48,7 +48,6 @@ function getBaseWebpackConfig (config) {
       //   loaders: [ 'babel?presets[]=es2015' ]
       // })
     ]
-
   }
   const name = process.env.NODE_ENV === 'production' ? 'build' : 'dev'
   if (config[name].index) {

@@ -16,7 +16,7 @@ Object.keys(entry).forEach(function (name) {
 
 module.exports = merge(baseWebpackConfig, {
   module: {
-    rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
+    rules: utils.styleLoaders({ sourceMap: true })
   },
   // 开发环境中添加map
   devtool: '#cheap-module-eval-source-map',

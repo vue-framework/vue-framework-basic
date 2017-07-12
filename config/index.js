@@ -6,21 +6,19 @@ module.exports = {
       app: 'main.js'
     },
     output: {
-      output: {
-        path: 'dist',
-        filename: '[name].min.js',
-        publicPath: '/'
-      }
+      path: 'dist',
+      filename: '[name].min.js',
+      publicPath: '/'
     },
     externals: [], // 不需要打包文件
     resolve: {
-      extensions: ['.js', '.vue', '.json'] // 省略后缀名
-    },
-    alias: { }// 别名
+      extensions: ['.js', '.vue', '.json'], // 省略后缀名
+      alias: { }// 别名
+    }
   },
   common: {
-    codeFolder: ['src'],  // babel eslint 解析inclue
-    static: 'static', // 静态文件地址
+    codeFolder: [],  // babel eslint 解析inclue
+    static: false, // 静态文件地址'./static'
     assetsRoot: 'src'
   },
   build: {

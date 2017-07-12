@@ -14,22 +14,25 @@ const config = {
       'vue',
       /^element-ui\/.+$/
     ],
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': '/packages',
-      '@components': '/packages/components',
-      '@layout': '/packages/layout',
-      '@dirictive': '/packages/dirictive',
-      '@elcomponents': '/packages/elcomponents',
-      '@filter': '/packages/filter',
-      '@utils': '/packages/utils'
+    resolve: {
+      alias: {
+        'vue$': 'vue/dist/vue.esm.js',
+        '@': './packages',
+        '@components': './packages/components',
+        '@layout': './packages/layout',
+        '@dirictive': './packages/dirictive',
+        '@elcomponents': './packages/elcomponents',
+        '@filter': './packages/filter',
+        '@utils': './packages/utils'
+      }
     }
   },
   common: {
-    codeFolder: ['packages'],
     assetsRoot: 'packages'
   },
   build: {
+    index: false,
+    extractCss: false
   }
 }
 
