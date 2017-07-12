@@ -3,7 +3,6 @@ var webpack = require('webpack')
 var config = require('../config')
 var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 let entry = {
@@ -16,25 +15,20 @@ Object.keys(entry).forEach(function (name) {
 })
 
 module.exports = merge(baseWebpackConfig, {
-  entry,
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap })
   },
   // 开发环境中添加map
   devtool: '#cheap-module-eval-source-map',
   plugins: [
+    // 设置环境变量
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
-    // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
+    // 热替换
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    // https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: './examples/index.html',
-      inject: true
-    }),
+    // 友好错误
     new FriendlyErrorsPlugin()
   ]
 })

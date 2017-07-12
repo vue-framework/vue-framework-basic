@@ -1,4 +1,4 @@
-//热加载
+// 热加载
 require('eventsource-polyfill')
 var hotClient = require('webpack-hot-middleware/client?noInfo=true&reload=true')
 

@@ -1,14 +1,6 @@
 var fs = require('fs')
 var path = require('path')
-var config = require('../config')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
-
-exports.assetsPath = function (_path) {
-  var assetsSubDirectory = process.env.NODE_ENV === 'production'
-    ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
-  return path.posix.join(assetsSubDirectory, _path)
-}
 
 exports.cssLoaders = function (options) {
   options = options || {}
@@ -83,4 +75,8 @@ exports.geEntry = function (paths) {
     })
   }
   return entry
+}
+// 从运行目录查找文件
+exports.rootPath = function (mypath) {
+  return path.join(process.cwd(), mypath)
 }

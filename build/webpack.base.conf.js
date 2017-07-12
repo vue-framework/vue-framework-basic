@@ -1,70 +1,69 @@
 var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
-}
-
-module.exports = {
-  output: {
-    path: config.build.assetsRoot,
-    filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
-  },
-  resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('packages'),
-      '@components': resolve('packages/components'),
-      '@layout': resolve('packages/layout'),
-      '@dirictive': resolve('packages/dirictive'),
-      '@elcomponents': resolve('packages/elcomponents'),
-      '@filter': resolve('packages/filter'),
-      '@utils': resolve('packages/utils')
-    }
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|vue)$/,
-        loader: 'eslint-loader',
-        enforce: 'pre',
-        include: [resolve('src'), resolve('test')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
+function getBaseWebpackConfig (config) {
+  let webpackConfig = {
+    module: {
+      rules: [
+        {
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          enforce: 'pre',
+          include: config.common.codeFolder,
+          options: {
+            formatter: require('eslint-friendly-formatter')
+          }
+        },
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          options: vueLoaderConfig
+        },
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          include: config.common.codeFolder
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: path.posix.join(config.common.static, 'img/[name].[hash:7].[ext]')
+          }
+        },
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: path.posix.join(config.common.static, 'fonts/[name].[hash:7].[ext]')
+          }
         }
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        include: [resolve('packages'), resolve('test')]
-      },
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
-      }
+      ]
+    },
+    plugins: [
+      // new HappyPack({
+      //   loaders: [ 'babel?presets[]=es2015' ]
+      // })
     ]
+
   }
+  const name = process.env.NODE_ENV === 'production' ? 'build' : 'dev'
+  if (config[name].index) {
+    webpackConfig.plugins.push(new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: config[name].index,
+      inject: true,
+      minify: {
+        removeComments: process.env.NODE_ENV === 'production',
+        collapseWhitespace: process.env.NODE_ENV === 'production',
+        removeAttributeQuotes: process.env.NODE_ENV === 'production'
+      },
+      chunksSortMode: 'dependency'
+    }))
+  }
+  return webpackConfig
 }
+module.exports = getBaseWebpackConfig

@@ -1,36 +1,20 @@
-var path = require('path')
 var utils = require('./utils')
 var webpack = require('webpack')
-var config = require('../config')
 var merge = require('webpack-merge')
-var baseWebpackConfig = require('./webpack.base.conf')
+var getbaseWebpackConfig = require('./webpack.base.conf')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 
-function getWebpackConfig (userWebpackConfig) {
-  var webpackConfig = merge(baseWebpackConfig, {
-    entry: utils.geEntry({
-      components: './packages/components',
-      layout: './packages/layout'
-    }),
+function getProdWebpackConfig (config) {
+  var webpackConfig = merge(getbaseWebpackConfig(config), config.webpack, {
     module: {
       rules: utils.styleLoaders({
-        sourceMap: config.build.productionSourceMap,
-        extract: true
+        sourceMap: false,
+        extract: config.build.extractCss
       })
     },
-    devtool: config.build.productionSourceMap ? '#source-map' : false,
-    output: {
-      path: config.build.assetsRoot,
-      filename: '[name].min.js',
-      libraryTarget: 'commonjs2'
-    },
-    externals: [
-      'vue',
-      /^element-ui\/.+$/
-    ],
+    devtool: false,
     plugins: [
       new webpack.DefinePlugin({
         'process.env': 'production'
@@ -41,18 +25,30 @@ function getWebpackConfig (userWebpackConfig) {
         },
         sourceMap: false
       }),
-      // 导出css
+      // 多个文件引用同一个css,去重
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
         }
+      }),,
+      // 导包module到vendor
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: function (module, count) {
+          return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            utils.rootPath('node_modules')
+          ) === 0
+          )
+        }
       })
     ]
   })
-
+  // 压缩
   if (config.build.productionGzip) {
     var CompressionWebpackPlugin = require('compression-webpack-plugin')
-
     webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
       asset: '[path].gz[query]',
@@ -67,11 +63,35 @@ function getWebpackConfig (userWebpackConfig) {
     })
   )
   }
-
+  // 来分析 Webpack 生成的包体组成并且以可视化的方式反馈给开发者
   if (config.build.bundleAnalyzerReport) {
     var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
     webpackConfig.plugins.push(new BundleAnalyzerPlugin())
   }
+  // 导出为css文件
+  if (config.build.extractCss) {
+    webpackConfig.plugins.push(new ExtractTextPlugin({
+      filename: 'css/[name].[contenthash].css'
+    }))
+  }
+
+  // 复制静态文件
+  if (config.common.static) {
+    webpackConfig.plugins.push(new CopyWebpackPlugin([
+      {
+        from: config.common.static,
+        to: 'static',
+        ignore: ['.*']
+      }
+    ]))
+  }
+  if (config.webpack.entry.vendor) {
+  // 打包本地lib文件到manifest，入口名字为vendor
+    webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: ['vendor']
+    }))
+  }
 }
 
-module.exports = getWebpackConfig
+module.exports = getProdWebpackConfig

@@ -4,28 +4,26 @@ process.env.NODE_ENV = 'production'
 
 var ora = require('ora')
 var rm = require('rimraf')
-var path = require('path')
 var chalk = require('chalk')
 var webpack = require('webpack')
-var config = require('../config')
-var webpackConfig = require('./webpack.prod.conf')
-
+var getProdWebpackConfig = require('./webpack.prod.conf')
 var spinner = ora('打包生产环境...')
-spinner.start()
 
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
-  if (err) throw err
-  webpack(webpackConfig, function (err, stats) {
-    spinner.stop()
+module.exports = function (config) {
+  spinner.start()
+  rm(config.webpack.output.path, err => {
     if (err) throw err
-    process.stdout.write(stats.toString({
-      colors: true,
-      modules: false,
-      children: false,
-      chunks: false,
-      chunkModules: false
-    }) + '\n\n')
-
-    console.log(chalk.cyan('打包完成')) 
+    webpack(getProdWebpackConfig(config), function (err, stats) {
+      spinner.stop()
+      if (err) throw err
+      process.stdout.write(stats.toString({
+        colors: true,
+        modules: false,
+        children: false,
+        chunks: false,
+        chunkModules: false
+      }) + '\n\n')
+      console.log(chalk.cyan('打包完成'))
+    })
   })
-})
+}

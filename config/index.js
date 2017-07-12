@@ -1,43 +1,43 @@
-// see http://vuejs-templates.github.io/webpack for documentation.
-var path = require('path')
 
 module.exports = {
+  webpack: {
+    context: process.cwd(),
+    entry: {
+      app: 'main.js'
+    },
+    output: {
+      output: {
+        path: 'dist',
+        filename: '[name].min.js',
+        publicPath: '/'
+      }
+    },
+    externals: [], // 不需要打包文件
+    resolve: {
+      extensions: ['.js', '.vue', '.json'] // 省略后缀名
+    },
+    alias: { }// 别名
+  },
   common: {
-    path: {
-      elcomponents: 'packages/elcomponents'
-    }
+    codeFolder: ['src'],  // babel eslint 解析inclue
+    static: 'static', // 静态文件地址
+    assetsRoot: 'src'
   },
   build: {
     env: require('./prod.env'),
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../lib'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-    productionSourceMap: true,
-    // Gzip off by default as many popular static hosts such as
-    // Surge or Netlify already gzip all static assets for you.
-    // Before setting to `true`, make sure to:
-    // npm install --save-dev compression-webpack-plugin
-    productionGzip: false,
+    index: 'index.html',
+    productionSourceMap: true, // 代码调试mao
+    productionGzip: false, // 压缩
     productionGzipExtensions: ['js', 'css'],
-    // Run the build command with an extra argument to
-    // View the bundle analyzer report after build finishes:
-    // `npm run build --report`
-    // Set to `true` or `false` to always turn it on or off
-    bundleAnalyzerReport: process.env.npm_config_report
+    bundleAnalyzerReport: false, // 打包后可视化提示
+    extractCss: true // 导出css
   },
   dev: {
     env: require('./dev.env'),
+    index: 'index.html',
     port: 8080,
     autoOpenBrowser: true,
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-    proxyTable: {},
-    // CSS Sourcemaps off by default because relative paths are "buggy"
-    // with this option, according to the CSS-Loader README
-    // (https://github.com/webpack/css-loader#sourcemaps)
-    // In our experience, they generally work as expected,
-    // just be aware of this issue when enabling this option.
-    cssSourceMap: true
+    proxyTable: {}, // 代理
+    cssSourceMap: true // 开启cssmap
   }
 }
