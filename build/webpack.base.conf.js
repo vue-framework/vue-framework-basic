@@ -1,20 +1,33 @@
 var path = require('path')
 var vueLoaderConfig = require('./vue-loader.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-
+var HappyPack = require('happypack')
 function getBaseWebpackConfig (config) {
   let webpackConfig = {
     module: {
       rules: [
-        {
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          enforce: 'pre',
-          include: config.common.codeFolder,
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        },
+        // {
+        //   test: /\.(js|vue)$/,
+        //   loader: 'eslint-loader',
+        //   enforce: 'pre',
+        //   include: config.common.codeFolder,
+        //   options: {
+        //     formatter: require('eslint-friendly-formatter')
+        //   }
+        // },
+        // {
+        //   test: /\.vue$/,
+        //   loader: 'happypack/loader',
+        //   options: vueLoaderConfig(config.build.extractCss)
+        // },
+        // {
+        //   test: /\.js$/,
+        //   exclude: /(node_modules|bower_components)/,
+        //   loader: 'happypack/loader',
+        //   options: {
+        //     id: 'babel'
+        //   }
+        // },
         {
           test: /\.vue$/,
           loader: 'vue-loader',
@@ -22,8 +35,11 @@ function getBaseWebpackConfig (config) {
         },
         {
           test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
           loader: 'babel-loader',
-          include: config.common.codeFolder
+          options: {
+            id: 'babel'
+          }
         },
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -44,9 +60,14 @@ function getBaseWebpackConfig (config) {
       ]
     },
     plugins: [
-      // new HappyPack({
-      //   loaders: [ 'babel?presets[]=es2015' ]
-      // })
+      new HappyPack({
+        id: 'babel',
+        loaders: [ 'babel-loader' ]
+      }),
+      new HappyPack({
+        id: 'vue',
+        loaders: [ 'vue-loader' ]
+      })
     ]
   }
   const name = process.env.NODE_ENV === 'production' ? 'build' : 'dev'

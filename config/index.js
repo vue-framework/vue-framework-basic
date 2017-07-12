@@ -6,9 +6,9 @@ module.exports = {
       app: 'main.js'
     },
     output: {
+      publicPath: '/',
       path: 'dist',
-      filename: '[name].min.js',
-      publicPath: '/'
+      filename: 'js/[name].min.js'
     },
     externals: [], // 不需要打包文件
     resolve: {

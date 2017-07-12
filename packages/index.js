@@ -32,7 +32,9 @@ const config = {
   },
   build: {
     index: false,
-    extractCss: false
+    extractCss: false,
+    productionGzip: true, // 压缩
+    productionGzipExtensions: ['js', 'css']
   }
 }
 
