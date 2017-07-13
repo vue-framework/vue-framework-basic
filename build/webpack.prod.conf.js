@@ -19,33 +19,33 @@ function getProdWebpackConfig (config) {
       new webpack.DefinePlugin({
         'process.env': 'production'
       }),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          warnings: false
-        },
-        sourceMap: false
-      }),
+      // new webpack.optimize.UglifyJsPlugin({
+      //   compress: {
+      //     warnings: false
+      //   },
+      //   sourceMap: false
+      // }),
       // 多个文件引用同一个css,去重
       new OptimizeCSSPlugin({
         cssProcessorOptions: {
           safe: true
         }
-      }),
-      // 导包module到vendor
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: function (module, count) {
-          return (
-          module.resource &&
-          /\.js$/.test(module.resource) &&
-          module.resource.indexOf(
-            utils.rootPath('node_modules')
-          ) === 0
-          )
-        }
       })
     ]
   })
+  //vendor
+  if (config.common.vendor) { 
+    webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
+          name: "vendor", 
+          minChunks: function (module) { 
+              if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
+                return false;
+              }
+              return module.context && module.context.indexOf("node_modules") !== -1;
+            },
+          minSize : 1000
+        }))
+  }
   // 压缩
   if (config.build.productionGzip) {
     var CompressionWebpackPlugin = require('compression-webpack-plugin')
@@ -83,14 +83,7 @@ function getProdWebpackConfig (config) {
         ignore: ['.*']
       }
     ]))
-  }
-  if (config.webpack.entry.vendor) {
-  // 打包本地lib文件到manifest，入口名字为vendor
-    webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-      name: 'manifest',
-      chunks: ['vendor']
-    }))
-  }
+  } 
   return webpackConfig
 }
 

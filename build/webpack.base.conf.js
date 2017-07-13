@@ -6,41 +6,30 @@ function getBaseWebpackConfig (config) {
   let webpackConfig = {
     module: {
       rules: [
-        // {
-        //   test: /\.(js|vue)$/,
-        //   loader: 'eslint-loader',
-        //   enforce: 'pre',
-        //   include: config.common.codeFolder,
-        //   options: {
-        //     formatter: require('eslint-friendly-formatter')
-        //   }
-        // },
-        // {
-        //   test: /\.vue$/,
-        //   loader: 'happypack/loader',
-        //   options: vueLoaderConfig(config.build.extractCss)
-        // },
-        // {
-        //   test: /\.js$/,
-        //   exclude: /(node_modules|bower_components)/,
-        //   loader: 'happypack/loader',
-        //   options: {
-        //     id: 'babel'
-        //   }
-        // },
+        {
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          enforce: 'pre',
+          include: config.common.codeFolder,
+          exclude: /(node_modules)/,
+          options: {
+            formatter: require('eslint-friendly-formatter')
+          }
+        },
         {
           test: /\.vue$/,
-          loader: 'vue-loader',
+          loader: 'happypack/loader', 
           options: vueLoaderConfig(config.build.extractCss)
         },
         {
           test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
-          loader: 'babel-loader',
+          //include: config.common.codeFolder,
+          exclude: /(node_modules)/,
+          loader: 'happypack/loader', 
           options: {
             id: 'babel'
           }
-        },
+        }, 
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
           loader: 'url-loader',

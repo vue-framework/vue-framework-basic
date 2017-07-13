@@ -1,10 +1,10 @@
-const build = require('../build')
+const build = require('../build') 
 const config = {
   webpack: {
     entry: build.geEntry({
-      components: './packages/components',
-      layout: './packages/layout'
-    }),
+                components: './packages/components',
+                layout: './packages/layout'
+              }),
     output: {
       path: 'lib',
       filename: '[name].min.js',
@@ -27,14 +27,14 @@ const config = {
       }
     }
   },
-  common: {
+  common: { 
+    vendor:false,
     assetsRoot: 'packages'
   },
   build: {
     index: false,
     extractCss: false,
-    productionGzip: true, // 压缩
-    productionGzipExtensions: ['js', 'css']
+    bundleAnalyzerReport:true
   }
 }
 

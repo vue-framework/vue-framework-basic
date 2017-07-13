@@ -1,6 +1,4 @@
-
-import fixedAuto from './layout-fixed-auto'
-
+import fixedAuto from './layout-fixed-auto' 
 const components = [
   fixedAuto
 ]

@@ -30,5 +30,8 @@ function merge (conf1, conf2) {
   conf.common.codeFolder = conf.common.codeFolder.concat(conf.common.assetsRoot).map(function (item) {
     return utils.rootPath(item)
   })
+  if(conf.common.vendor&&conf.common.vendor!=='module'){
+    conf.webpack.entry.vendor = conf.common.vendor
+  }
   return conf
 }

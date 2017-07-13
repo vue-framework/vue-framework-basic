@@ -1,7 +1,7 @@
 
 import RichEditor from './basel-rich-editor'
 import ElInputTree from './basel-input-tree'
-
+import 'jquery'
 const components = [
   RichEditor,
   ElInputTree

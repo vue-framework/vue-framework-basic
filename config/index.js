@@ -8,7 +8,7 @@ module.exports = {
     output: {
       publicPath: '/',
       path: 'dist',
-      filename: 'js/[name].min.js'
+      filename: 'js/[name].min.js?[chunkhash]'
     },
     externals: [], // 不需要打包文件
     resolve: {
@@ -17,6 +17,7 @@ module.exports = {
     }
   },
   common: {
+    vendor:'module',
     codeFolder: [],  // babel eslint 解析inclue
     static: false, // 静态文件地址'./static'
     assetsRoot: 'src'
