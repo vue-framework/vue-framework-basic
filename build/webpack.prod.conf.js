@@ -33,18 +33,18 @@ function getProdWebpackConfig (config) {
       })
     ]
   })
-  //vendor
-  if (config.common.vendor) { 
+  // vendor
+  if (config.common.vendor) {
     webpackConfig.plugins.push(new webpack.optimize.CommonsChunkPlugin({
-          name: "vendor", 
-          minChunks: function (module) { 
-              if(module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
-                return false;
-              }
-              return module.context && module.context.indexOf("node_modules") !== -1;
-            },
-          minSize : 1000
-        }))
+      name: 'vendor',
+      minChunks: function (module) {
+        if (module.resource && (/^.*\.(css|scss)$/).test(module.resource)) {
+          return false
+        }
+        return module.context && module.context.indexOf('node_modules') !== -1
+      },
+      minSize: 1000
+    }))
   }
   // 压缩
   if (config.build.productionGzip) {
@@ -83,7 +83,7 @@ function getProdWebpackConfig (config) {
         ignore: ['.*']
       }
     ]))
-  } 
+  }
   return webpackConfig
 }
 

@@ -18,18 +18,18 @@ function getBaseWebpackConfig (config) {
         },
         {
           test: /\.vue$/,
-          loader: 'happypack/loader', 
+          loader: 'happypack/loader',
           options: vueLoaderConfig(config.build.extractCss)
         },
         {
           test: /\.js$/,
-          //include: config.common.codeFolder,
+          // include: config.common.codeFolder,
           exclude: /(node_modules)/,
-          loader: 'happypack/loader', 
+          loader: 'happypack/loader',
           options: {
             id: 'babel'
           }
-        }, 
+        },
         {
           test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
           loader: 'url-loader',

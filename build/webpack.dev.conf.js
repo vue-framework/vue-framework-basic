@@ -3,6 +3,7 @@ var webpack = require('webpack')
 var merge = require('webpack-merge')
 var getbaseWebpackConfig = require('./webpack.base.conf')
 var FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = function getDevWebpackConfig (config) {
   let entry = config.webpack.entry
@@ -25,7 +26,11 @@ module.exports = function getDevWebpackConfig (config) {
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
     // 友好错误
-      new FriendlyErrorsPlugin()
+      new FriendlyErrorsPlugin(),
+    // css
+      new ExtractTextPlugin({
+        filename: 'css/[name].[contenthash].css'
+      })
     ]
   }, config.webpack)
   return myConfig
