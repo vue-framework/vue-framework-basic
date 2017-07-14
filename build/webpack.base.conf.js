@@ -2,6 +2,7 @@ var path = require('path')
 var vueLoaderConfig = require('./vue-loader.conf')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var HappyPack = require('happypack')
+
 function getBaseWebpackConfig (config) {
   let webpackConfig = {
     module: {
@@ -72,6 +73,15 @@ function getBaseWebpackConfig (config) {
       },
       chunksSortMode: 'dependency'
     }))
+  }
+  // 添加router
+  if (config.router) {
+    webpackConfig.module.rules.splice(1, 0, {
+      test: /\.js$/,
+      exclude: /(node_modules)/,
+      loader: path.resolve(__dirname, './loader/auto-router-loader'),
+      options: config.router
+    })
   }
   return webpackConfig
 }

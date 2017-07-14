@@ -63,7 +63,7 @@ exports.styleLoaders = function (options) {
   return output
 }
 
-// 获取开发环境的入口
+// 获取开发环境的入口(为了组件开发)
 exports.geEntry = function (paths) {
   let entry = {}
   for (let key in paths) {

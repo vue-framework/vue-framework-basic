@@ -28,7 +28,7 @@ module.exports = {
     productionSourceMap: true, // 代码调试mao
     productionGzip: false, // 压缩
     productionGzipExtensions: ['js', 'css'],
-    bundleAnalyzerReport: false, // 打包后可视化提示
+    bundleAnalyzerReport: true, // 打包后可视化提示
     extractCss: true // 导出css
   },
   dev: {
@@ -38,5 +38,9 @@ module.exports = {
     autoOpenBrowser: true,
     proxyTable: {}, // 代理
     cssSourceMap: true // 开启cssmap
+  },
+  router: {
+    lazy: true, // 是否懒加载
+    path: './src' // 需要被路由代码地址
   }
 }

@@ -35,7 +35,8 @@ const config = {
     index: false,
     extractCss: false,
     bundleAnalyzerReport: true
-  }
+  },
+  router: false
 }
 
 build.build(config)

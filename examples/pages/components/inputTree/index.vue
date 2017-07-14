@@ -12,7 +12,6 @@
         :noParent="0"
         > 
         </bas-input-tree>
-        <div>12312313123</div>
     </div>
 </template>
 <script>
