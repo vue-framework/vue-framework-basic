@@ -8,7 +8,7 @@
 <template>
     <div> 
       <layout-fixed-auto :left-width="layout.leftWidth">
-        <el-menu slot="left" mode="vertical" default-active="1" style="display:none">
+        <el-menu slot="left" mode="vertical" default-active="1">
             <el-menu-item-group title="分组一">
                 <el-menu-item index="1"><i class="el-icon-message"></i>导航一</el-menu-item>
                 <el-menu-item index="2"><i class="el-icon-message"></i>导航二</el-menu-item>
@@ -30,12 +30,6 @@
       return {
         layout: {
           leftWidth: '200px'
-        },
-        header: {
-          components: '组件',
-          dirictives: '指令',
-          filters: '过滤器',
-          layout: '布局'
         }
       }
     },

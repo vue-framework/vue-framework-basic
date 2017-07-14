@@ -41,6 +41,7 @@ module.exports = {
   },
   router: {
     lazy: true, // 是否懒加载
-    path: './src' // 需要被路由代码地址
+    path: './src', // 需要被路由代码地址
+    empty: 'empty' // 404文件名
   }
 }

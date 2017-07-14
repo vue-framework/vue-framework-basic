@@ -7,7 +7,7 @@
 </style>
 <template>
     <div>
-      <header style="display:none">
+      <header>
           <el-menu mode="horizontal" @select="handleSelect">
                 <el-menu-item class="f-right" :key="index" v-for="(val, key, index) in header" index="3"><a href="https://www.ele.me">{{val}}</a></el-menu-item>
           </el-menu>

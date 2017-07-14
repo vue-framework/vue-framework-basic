@@ -9,12 +9,8 @@ import components from '@components'
 // router start
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
-
-const router = new VueRouter({
-  routes: require('auto-router'),
-  mode: 'history',
-  base: '/'
-})
+let autoRouter = require('auto-router')
+const router = new VueRouter(autoRouter)
 // router end
 
 Vue.use(ElementUI)
