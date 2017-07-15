@@ -7,7 +7,7 @@
 </style>
 <script>
 export default {
-  name: 'layout-fixed-auto',
+  name: 'layout-fixedauto',
   functional: true,
   props: {
     leftWidth: {
@@ -16,7 +16,7 @@ export default {
   },
   render (createElement, context) {
     return (
-      <div class='layout-fixed-auto'>
+      <div class={'layout-fixed-auto' + context.props.clazz}>
         <div class='layout-left' style={'width:' + context.props.leftWidth + ';'}>
           {context.slots().left}
         </div>

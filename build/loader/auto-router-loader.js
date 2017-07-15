@@ -14,11 +14,12 @@ function getRoute (options) {
   let arr = options.path.split('/')
   let json = setStr(rootPath, './' + arr[arr.length - 1])
   let data = merge({
-    router: json
+    routes: json
   }, read(rootPath))
   write(rootPath, data)
   console.log('写入router.JSON文件')
-  return parseTreeJson(data)
+  str = parseTreeJson(data)
+  return str
 
   // 递归遍历设置str
   function setStr (PabsPath, Prelpath, ischild) {
@@ -88,8 +89,8 @@ function parseTreeJson (json, isc) {
 function merge (json1, json2) {
   if (!json2) return json1
   let obj = Object.assign({}, json1, json2)
-  if (json1.router && json2.router) {
-    obj.router = mergeArr(json1.router, json2.router)
+  if (json1.routes && json2.routes) {
+    obj.routes = mergeArr(json1.routes, json2.routes)
   }
   return obj
   // const webmerge = require('webpack-merge')g
@@ -109,7 +110,7 @@ function merge (json1, json2) {
   }
 }
 
-getRoute({
-  path: './examples/pages',
-  lazy: true
-})
+// getRoute({
+//   path: './examples/pages',
+//   lazy: true
+// })

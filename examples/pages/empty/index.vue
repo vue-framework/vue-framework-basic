@@ -1,9 +1,11 @@
 <style lang="less">
-
+.bk-red{ 
+  height:100%;
+}
 </style>
 <template>
-    <div> 
-           404  404  404
+    <div class="bk-red"> 
+       qweqew
     </div>
 </template>
 <script>

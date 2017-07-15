@@ -14,7 +14,8 @@ let config = {
         '@dirictive': '../packages/dirictive',
         '@elcomponents': '../packages/elcomponents',
         '@filter': '../packages/filter',
-        '@utils': '../packages/utils'
+        '@utils': '../packages/utils',
+        '@static': '../packages/static'
       }
     }
   },
@@ -24,7 +25,7 @@ let config = {
   },
   dev: {
     index: './examples/index.html',
-    port: 8080,
+    port: 8081,
     autoOpenBrowser: false,
     proxyTable: {}, // 代理
     cssSourceMap: true // 开启cssmap

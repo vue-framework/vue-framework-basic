@@ -1,6 +1,8 @@
-import fixedAuto from './layout-fixed-auto'
+import fixedauto from './layout-fixedauto'
+import fixedFixedauto from './layout-fixed-fixedAuto'
 const components = [
-  fixedAuto
+  fixedauto,
+  fixedFixedauto
 ]
 
 const install = function (Vue) {
@@ -14,4 +16,4 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 };
 
-export default { install, fixedAuto }
+export default { install, fixedauto, fixedFixedauto }

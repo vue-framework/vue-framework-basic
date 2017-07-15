@@ -1,9 +1,11 @@
 
 import RichEditor from './basel-rich-editor'
-import ElInputTree from './basel-input-tree'
+import inputTree from './basel-input-tree'
+import leftNav from './basel-left-nav'
 const components = [
   RichEditor,
-  ElInputTree
+  inputTree,
+  leftNav
 ]
 
 const install = function (Vue) {
@@ -17,4 +19,4 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 };
 
-export default { install, RichEditor, ElInputTree }
+export default { install, RichEditor, inputTree, leftNav }

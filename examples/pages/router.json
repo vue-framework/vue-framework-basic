@@ -1,0 +1,22 @@
+{
+  "routes": [
+    {
+      "path": "/components",
+      "label": "组件",
+      "colorIcon": "icon-bijiben",
+      "component": "resolve => require(['./pages/components/index.vue'], resolve) ",
+      "children": [
+        {
+          "path": "inputTree",
+          "label": "下拉树",
+          "colorIcon": "icon-shuqian1",
+          "component": "resolve => require(['./pages/components/inputTree/index.vue'], resolve) "
+        }
+      ]
+    },
+    {
+      "path": "*",
+      "component": "resolve => require(['./pages/empty/index.vue'], resolve) "
+    }
+  ]
+}

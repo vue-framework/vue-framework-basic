@@ -6,16 +6,20 @@ import '../packages/style/constant.less'
 import App from './App.vue'
 import layout from '@layout'
 import components from '@components'
+import utils from '@utils'
 // router start
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 let autoRouter = require('auto-router')
+console.log(autoRouter)
 const router = new VueRouter(autoRouter)
 // router end
 
 Vue.use(ElementUI)
 Vue.use(layout)
 Vue.use(components)
+Vue.use(utils)
+
 const a = new Vue({
   router,
   el: '#app',
