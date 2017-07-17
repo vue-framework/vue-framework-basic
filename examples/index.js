@@ -20,7 +20,7 @@ let config = {
     }
   },
   common: {
-    static: false, // 静态文件地址'./static'
+    static: './examples/static', // 静态文件地址'./static'
     assetsRoot: 'examples'
   },
   dev: {

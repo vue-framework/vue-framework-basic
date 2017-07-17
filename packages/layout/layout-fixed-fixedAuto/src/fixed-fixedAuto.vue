@@ -19,6 +19,7 @@
     .layout-top{
         position: fixed;
         top: 0;
+        left:0;
         width: auto;
         right: 0;
         z-index:90;
@@ -57,7 +58,7 @@ export default {
           {context.slots().left}
         </div>
         <div class='layout-content' style={'left:' + context.props.leftWidth + ';'}>
-          <div class='layout-top' style={'left:' + context.props.leftWidth + ';height:' + context.props.headerTop + ';'}>
+          <div class='layout-top' style={'height:' + context.props.headerTop + ';'}>
             {context.slots().top}
           </div>
           <div class='layout-right' style={'top:' + context.props.headerTop + ';'}>

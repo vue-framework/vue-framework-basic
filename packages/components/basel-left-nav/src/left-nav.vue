@@ -4,7 +4,7 @@
       <div class="el-left-nav" v-if="!thumbnail">
         <div class="el-left-nav-container">
           <div class="el-left-logo">
-            <a :href="href" target="_self" class="el-logo-link">
+            <a target="_self" class="el-logo-link">
               <img :src="logo" alt="">
               <i></i>
             </a>
@@ -17,10 +17,10 @@
           </div>
           <div class="el-left-toolbar">
             <el-collapse accordion v-model="activeName" @change="handleCollapse">
-              <el-collapse-item v-for="(item, index) in menu" :index="item.title" :key="index" :name="'name=' + item.title + '&index=' + index">
+              <el-collapse-item v-if="item.title" v-for="(item, index) in menu" :index="item.title" :key="index" :name="'name=' + item.title + '&index=' + index">
                 <template slot="title">
-                  <div v-if="item.hash && !item.submenu.length">
-                    <a :href="item.hash" class="el-menu-hash">
+                  <div v-if="item.path && (!item.children||!item.children.length)">
+                    <a  class="el-menu-path">
                       <i class="el-icon-null" :class="item.styleObject" ></i><span v-html="item.title"></span>
                     </a>
                   </div>
@@ -29,21 +29,21 @@
                   </div>
                 </template>
                 <el-menu @select="doSelectMenu" :default-active="menuActive">
-                  <el-menu-item v-for="(prop, num) in item.submenu" :index="'title='+item.title + '/' + prop.title + '&index=' + index + ',' + num" :key="index">
-                    <div v-if="prop.hash && !prop.submenu.length">
-                      <a :href="prop.hash" class="el-menu-hash"><i :class="prop.iconClass"></i><span v-html="prop.title"></span></a>
+                  <el-menu-item v-if="prop.title" v-for="(prop, num) in item.children" :index="index+',' + num" :key="index">
+                    <div v-if="prop.path && (!prop.children||!prop.children.length)">
+                      <a class="el-menu-path"><i :class="prop.iconClass" v-html="iconSVG(prop.iconSVG)"></i><span v-html="prop.title"></span></a>
                     </div>
-                    <div v-else><i :class="prop.iconClass"></i><span v-html="prop.title"></span></div>
+                    <div v-else><i :class="prop.iconClass" v-html="iconSVG(prop.iconSVG)"></i><span v-html="prop.title"></span></div>
                   </el-menu-item>
                 </el-menu>
               </el-collapse-item>
             </el-collapse>
-            <div class="el-left-bar" :class="{active: showSelectMenu}" v-if="selectMenu.submenu.length">
+            <div class="el-left-bar" :class="{active: showSelectMenu}" v-if="selectMenu.children&&selectMenu.children.length">
               <span class="el-arrow-left" @click="hideLeftBar"></span>
               <el-menu @select="doSelectSubMenu" :default-active="subMenuActive">
                 <el-menu-item-group :title="selectMenu.title">
-                  <el-menu-item v-for="(item, index) in selectMenu.submenu" :index="'title='+item.title + '&index=' + index" :key="index">
-                    <a :href="item.hash" v-if="item.hash" class="el-menu-hash"><span v-html="item.title"></span></a>
+                  <el-menu-item v-if="item.title" v-for="(item, index) in selectMenu.children" :index="'title='+item.title + '&index=' + index" :key="index">
+                    <a v-if="item.path" class="el-menu-path"><span v-html="item.title"></span></a>
                     <span v-html="item.title" v-else></span>
                   </el-menu-item>
                 </el-menu-item-group>
@@ -57,7 +57,7 @@
       <div class="el-left-nav el-left-nav-min" v-if="thumbnail">
         <div class="el-left-nav-container">
           <div class="el-left-logo">
-            <a :href="href" target="_self" class="el-logo-link">
+            <a   target="_self" class="el-logo-link">
               <img :src="logo" alt="">
               <i></i>
             </a>
@@ -69,33 +69,37 @@
           </div>
           <div class="el-left-toolbar">
             <el-collapse accordion v-model="activeName" @change="handleCollapse">
-              <el-collapse-item v-for="(item, index) in menu" :index="item.title" :key="index" :name="'name=' + item.title + '&index=' + index">
+              <el-collapse-item v-if="item.title" v-for="(item, index) in menu" :index="item.title" :key="index" :name="'name=' + item.title + '&index=' + index">
                 <template slot="title">
-                  <div v-if="item.hash && !item.submenu.length">
-                    <a :href="item.hash" class="el-menu-hash">
-                      <i class="el-icon-caret-right" :class="item.styleObject"></i>
-                    </a>
+                  <div v-if="item.path && (!item.children||!item.children.length)">
+                    <!--<el-tooltip effect="dark" :content="item.title" placement="right">-->
+                      <a  class="el-menu-path">
+                        <i class="el-icon-caret-right" :class="item.styleObject"></i>
+                      </a>
+                    <!--</el-tooltip>-->
                   </div>
                   <div :class="item.styleObject" v-else>
-                    <i class="el-icon-caret-right"></i>
+                    <!--<el-tooltip effect="dark" :content="item.title" placement="right">-->
+                      <i class="el-icon-caret-right"></i>
+                    <!--</el-tooltip>-->
                   </div>    
                 </template>
                 <el-menu @select="doSelectMenu" :default-active="menuActive">
-                  <el-menu-item v-for="(prop, num) in item.submenu" :index="'title='+item.title + '/' + prop.title + '&index=' + index + ',' + num" :key="index">
+                  <el-menu-item v-if="prop.title" v-for="(prop, num) in item.children" :index="index+',' + num"  :key="index">
                     <el-tooltip effect="dark" :content="prop.title" placement="right">
-                      <a :href="prop.hash" v-if="prop.hash && !prop.submenu.length" class="el-menu-hash"><i :class="prop.iconClass"></i></a>
-                      <i :class="prop.iconClass" v-else></i>
+                      <a  v-if="prop.path && (!prop.children||!prop.children.length)" class="el-menu-path"><i :class="prop.iconClass" v-html="iconSVG(prop.iconSVG)"></i></a>
+                      <i :class="prop.iconClass" v-html="iconSVG(prop.iconSVG)" v-else></i>
                     </el-tooltip>
                   </el-menu-item>
                 </el-menu>
               </el-collapse-item>
             </el-collapse>
-            <div class="el-left-bar" :class="{active: showSelectMenu}"  v-if="selectMenu.submenu.length">
+            <div class="el-left-bar" :class="{active: showSelectMenu}"  v-if="selectMenu.children&&selectMenu.children.length">
               <span class="el-arrow-left" @click="hideLeftBar"></span>
               <el-menu @select="doSelectSubMenu" :default-active="subMenuActive">
                 <el-menu-item-group :title="selectMenu.title">
-                  <el-menu-item v-for="(item, index) in selectMenu.submenu" :index="'title='+item.title + '&index=' + index" :key="index">
-                    <a :href="item.hash" v-if="item.hash" class="el-menu-hash"><span v-html="item.title"></span></a>
+                  <el-menu-item v-if="item.title" v-for="(item, index) in selectMenu.children" :index="'title='+item.title + '&index=' + index" :key="index">
+                    <a v-if="item.path" class="el-menu-path"><span v-html="item.title"></span></a>
                     <span v-html="item.title" v-else></span>
                   </el-menu-item>
                 </el-menu-item-group>
@@ -110,6 +114,9 @@
 <script>
   export default {
     created: function () {
+      if (!this.utils.iconSVG) {
+        throw new Error('请先引用 utils 中的 fontIcon 插件')
+      }
       if (!this.utils.componentExists) {
         throw new Error('请先引用 utils 中的 tools 插件')
       }
@@ -137,7 +144,7 @@
       return {
         selectMenu: {
           title: '',
-          submenu: []
+          children: []
         },
         showSelectMenu: false,
         thumbnail: false,
@@ -161,7 +168,7 @@
       location: {
         type: String,
         required: false,
-        default: '竞网智赢'
+        default: '我的标题'
       },
       menu: {
         type: Array,
@@ -169,6 +176,9 @@
       }
     },
     methods: {
+      iconSVG (name) {
+        return this.utils.iconSVG(name)
+      },
       getQueryString (uri, name) {
         let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
         let queryStr = uri
@@ -192,27 +202,27 @@
         }
       },
       doSelectMenu (index, indexPath, item) {
-        let path = this.getQueryString(index, 'index').split('')
+        let indexArr = index.split(',')
+        let data = this.menu[indexArr[0]].children[indexArr[1]]
+        let path = this.menu[indexArr[0]].path + '/' + data.path
         let title = this.getQueryString(index, 'title')
         let mindex = this.getQueryString(index, 'index')
-        this.$set(this.selectMenu, 'title', this.menu[path[0]].submenu[path[2]].title)
-        this.$set(this.selectMenu, 'submenu', this.menu[path[0]].submenu[path[2]].submenu)
+        this.$set(this.selectMenu, 'title', data.title)
+        this.$set(this.selectMenu, 'children', data.children)
         // 需要判断是否需要展开第三级
-        this.showSelectMenu = !!(this.selectMenu.submenu && this.selectMenu.submenu.length)
+        this.showSelectMenu = !!(this.selectMenu.children && this.selectMenu.children.length)
         this.rootMenu = item.rootMenu
         this.menuActive = index
         if (this.subRootMenu) {
           this.subRootMenu.activedIndex = ''
           this.subMenuActive = ''
         }
-        this.$emit('select-menu', {
-          title: title,
-          index: mindex
-        }, this.showSelectMenu)
+        this.$emit('select-menu', path, data, this.showSelectMenu)
         this.selectName = title
         this.selectPath = mindex
       },
       doSelectSubMenu (index, indexPath, item) {
+        console.log(index, indexPath, item)
         let title = this.getQueryString(index, 'title')
         let mindex = this.getQueryString(index, 'index')
         this.subRootMenu = item.rootMenu
@@ -256,7 +266,7 @@
 }
 .el-left-nav .el-left-logo {
   width: 100%;
-  height: 50px;
+  height: 60px;
   background: #1f2d3d;
   text-align: center;
 }
@@ -309,7 +319,7 @@
   width: 16px;
   height: 16px;
   color: #fff;
-  background: url('./thumbnail.png') no-repeat center center;
+  background: url('./images/thumbnail.png') no-repeat center center;
   background-position: 0 -63px;
   vertical-align: middle;
 }
@@ -350,14 +360,13 @@
   color: #fff;
 }
 .el-left-nav .el-menu .el-menu-item i {
-  margin-left: 10px;
+  margin-left: 8px;
+  margin-right: 4px;
   color: #8492a6;
-  font-size: 10px;
+  font-size: 16px;
   line-height: 100%;
 }
-.el-left-nav .el-menu .el-menu-item .el-icon-share {
-  font-size: 18px;
-}
+
 .el-left-nav .el-left-bar {
   position: absolute;
   width: 180px;
@@ -413,7 +422,7 @@
   top: 10px;
   left: auto;
   right: -12px;
-  background: url('./arrows.png') #fff no-repeat center center;
+  background: url('./images/arrows.png') #fff no-repeat center center;
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   background-position: 0 0;
@@ -445,7 +454,7 @@
   width: 16px;
   height: 16px;
   color: #fff;
-  background: url('./thumbnail.png') no-repeat center center;
+  background: url('./images/thumbnail.png') no-repeat center center;
   background-position: 0 -20px;
   vertical-align: middle;
 }
@@ -484,7 +493,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.el-left-toolbar .el-collapse-item__header .el-menu-hash{
+.el-left-toolbar .el-collapse-item__header .el-menu-path{
   display: block;
   width: 100%;
   color: inherit;
@@ -526,14 +535,14 @@
 .el-left-nav-min .el-collapse-item .el-menu-item {
   padding: 0;
 }
-.el-left-nav .el-left-bar .el-menu-hash,
-.el-left-nav .el-left-bar .el-menu-hash:hover{
+.el-left-nav .el-left-bar .el-menu-path,
+.el-left-nav .el-left-bar .el-menu-path:hover{
   display: block;
   color: inherit;
   text-decoration: none;
 }
-.el-left-nav .el-menu .el-menu-hash,
-.el-left-nav .el-menu .el-menu-hash:hover{
+.el-left-nav .el-menu .el-menu-path,
+.el-left-nav .el-menu .el-menu-path:hover{
   display: block;
   color: inherit;
   text-decoration: none;
@@ -545,7 +554,7 @@
   transition: all .3s ease-in-out;
 }
 .slide-fade-1-enter, .slide-fade-1-leave-active {
-  transform: translateX(-180px);
+  transform: translateX(-100%);
   opacity: 0;
 }
 .slide-fade-2-enter-active {

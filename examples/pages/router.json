@@ -7,16 +7,16 @@
         {
           "path": "inputTree",
           "component": "resolve => require(['./pages/components/inputTree/index.vue'], resolve) ",
-          "label": "下拉树",
-          "colorIcon": "icon-shuqian1"
+          "title": "下拉树",
+          "iconSVG": "icon-tupian"
         }
       ],
-      "label": "组件",
-      "colorIcon": "icon-bijiben"
+      "title": "组件"
     },
     {
       "path": "*",
       "component": "resolve => require(['./pages/empty/index.vue'], resolve) "
     }
-  ]
+  ],
+  "mode": "history"
 }
