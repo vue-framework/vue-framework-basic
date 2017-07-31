@@ -1,7 +1,8 @@
-<style lang="less">
+<style lang="less" scoped>
+
 </style>
 <template>
-  <div style="height:100%"> 
+  <div class="systemDemo">
     <router-view></router-view>
   </div>  
 </template>

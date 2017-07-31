@@ -8,6 +8,15 @@
     }
   }
 </style>
+<style scoped>
+.wrap{
+  width:100%;
+  height:100%;
+  overflow: auto;
+  padding:10px;
+  box-sizing: border-box;
+}
+</style>
 <template>
   <layout-fixed-fixedauto :leftWidth="leftWidth">
     <el-menu slot="top" mode="horizontal">
@@ -17,7 +26,14 @@
     </el-menu>
     <bas-left-nav slot="left" v-bind="leftNav" @select-menu="selectNav" @hide-thumbnail="toggleNav">
     </bas-left-nav>
-    <router-view slot="right"></router-view>
+    <div slot="right" class="wrap">
+      <div> 
+          <template  v-for="item in $route.matched" v-if="false">
+            <router-link :to="item.path">{{item.meta.name}}</router-link>/
+          </template>
+      </div>
+      <router-view></router-view>
+    </div>
   </layout-fixed-fixedauto>
 </template>
 <script>
@@ -48,7 +64,6 @@
       }
     },
     created () {
-      console.log(require('./pages/router').routes)
       // this.leftNav.logo = this.utils.iconSVG('icon-biaoqing')
       // this.leftNav.toggle = this.utils.iconSVG('icon-fenlei1')
     }

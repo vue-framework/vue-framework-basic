@@ -1,7 +1,7 @@
 <style lang="less">
 </style>
 <template>
-  <div style="height:100%"> 
+  <div> 
     <router-view></router-view>
   </div>  
 </template>

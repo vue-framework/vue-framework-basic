@@ -11,7 +11,6 @@ import utils from '@utils'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 let autoRouter = require('auto-router')
-console.log(autoRouter)
 const router = new VueRouter(autoRouter)
 // router end
 

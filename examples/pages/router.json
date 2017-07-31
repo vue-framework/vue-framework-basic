@@ -1,21 +1,94 @@
 {
   "routes": [
     {
+      "path": "/auto",
+      "component": "resolve => require(['./pages/auto/index.vue'], resolve) ",
+      "children": [
+        {
+          "path": "form",
+          "component": "resolve => require(['./pages/auto/form/index.vue'], resolve) ",
+          "title": "自动化表单",
+          "iconSVG": "icon-tupian"
+        }
+      ],
+      "title": "自动化工具"
+    },
+    {
       "path": "/components",
       "component": "resolve => require(['./pages/components/index.vue'], resolve) ",
       "children": [
         {
+          "path": "form",
+          "component": "resolve => require(['./pages/components/form/index.vue'], resolve) ",
+          "title": "表单",
+          "iconSVG": "icon-tupian"
+        },
+        {
           "path": "inputTree",
           "component": "resolve => require(['./pages/components/inputTree/index.vue'], resolve) ",
           "title": "下拉树",
+          "meta": {
+            "name": "下拉树"
+          },
           "iconSVG": "icon-tupian"
+        },
+        {
+          "path": "table",
+          "component": "resolve => require(['./pages/components/table/index.vue'], resolve) ",
+          "iconSVG": "icon-tupian",
+          "title": "表格"
         }
       ],
+      "meta": {
+        "name": "组件"
+      },
       "title": "组件"
     },
     {
       "path": "*",
       "component": "resolve => require(['./pages/empty/index.vue'], resolve) "
+    },
+    {
+      "path": "/layout",
+      "component": "resolve => require(['./pages/layout/index.vue'], resolve) ",
+      "children": [
+        {
+          "path": "powerFull",
+          "component": "resolve => require(['./pages/layout/powerFull/index.vue'], resolve) ",
+          "title": "flex布局"
+        }
+      ],
+      "title": "布局"
+    },
+    {
+      "path": "/systemDemo",
+      "component": "resolve => require(['./pages/systemDemo/index.vue'], resolve) ",
+      "children": [
+        {
+          "path": "table",
+          "component": "resolve => require(['./pages/systemDemo/table/index.vue'], resolve) ",
+          "title": "图表类",
+          "iconSVG": "icon-rili",
+          "meta": {
+            "name": "图表类"
+          }
+        }
+      ],
+      "meta": {
+        "name": "系统案例"
+      },
+      "title": "系统案例",
+      "iconSVG": "icon-fasong"
+    },
+    {
+      "path": "/utils",
+      "component": "resolve => require(['./pages/utils/index.vue'], resolve) ",
+      "children": [
+        {
+          "path": "validate",
+          "component": "resolve => require(['./pages/utils/validate/index.vue'], resolve) "
+        }
+      ]
     }
   ],
   "mode": "history"

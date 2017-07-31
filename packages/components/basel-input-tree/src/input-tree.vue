@@ -16,7 +16,7 @@
 }
 .input-tree .tree{
     position:absolute;
-    z-index:1000;
+    z-index:1100;
     width:100%;   
     border-radius: 2px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -46,14 +46,22 @@
 <template>
     <div class="input-tree"  v-clickoutside="hide"> 
         <div :title="showTitle?showLabel:''">
-          <el-input :disabled="true"  :class="['input',visible?'hideIcon':'']" :placeholder="placeholder" icon="caret-top" :value="showLabel" @click.native="toggle"></el-input>
+          <el-input :disabled="true"
+                    :class="['input',visible?'hideIcon':'']" 
+                    :placeholder="placeholder" 
+                    icon="caret-top" 
+                    :value="showLabel" 
+                    @click.native="toggle">
+          </el-input>
         </div>
         <el-collapse-transition>
             <div class="tree" v-show="visible">
                 <el-tree
                 :class="[showParentCheckbox?'':'input-tree-noParentSelect']"
                 ref="tree"
-                :data="treedata"
+                :lazy="lazy"
+                :load="loadNode"
+                :data="treeList"
                 :show-checkbox="showCheckbox"
                 @node-click ="nodeClick"
                 @check-change = "checkChange"
@@ -68,13 +76,15 @@
 <script>
     import Clickoutside from 'element-ui/src/utils/clickoutside'
     export default {
-      name: 'basInputTree',
+      name: 'BasInputTree',
       data () {
         return {
           visible: false,
           timeout: null,
           change: true,
-          showLabel: ''
+          showLabel: '',
+          treeList: [],
+          lazy: true
         }
       },
       props: {
@@ -89,7 +99,9 @@
         showParentCheckbox: {
           default: false
         },
-        showCheckbox: {},
+        showCheckbox: {
+          default: false
+        },
         nodeKey: {
           default: 'id'
         },
@@ -143,6 +155,31 @@
         }
       },
       methods: {
+        getArr (data) {
+          console.log(data)
+          if (!data) return []
+          let arr = []
+          for (let i = 0; i < data.length; i++) {
+            let item = data[i]
+            let obj = {}
+            for (let key in item) {
+              if (key !== this.children) {
+                obj[key] = item[key]
+              } else {
+                obj.c = item[key]
+              }
+            }
+            arr.push(obj)
+          }
+          return arr
+        },
+        loadNode (node, resolve) {
+          if (node.level) {
+            resolve(this.getArr(node.data.c))
+          } else {
+            resolve(this.getArr(this.treedata))
+          }
+        },
         toggle () {
           this.visible = !this.visible
         },
@@ -159,7 +196,7 @@
           }, 150)
         },
         nodeClick (value, node, elem) {
-          if (!this.showCheckbox && !node.childNodes.length) {
+          if (!this.showCheckbox && !node.data.c.length) {
             this.hide()
             this.showLabel = this.addParentName('', value).slice(2)
             this.changevalue([value[this.nodeKey]])
@@ -231,12 +268,24 @@
         }
       },
       watch: {
+        data () {
+          if (this.lazy) {
+            this.treeList = this.getArr(this.treedata)
+          } else {
+            this.treeList = this.treedata
+          }
+        },
         value (n, o) {
           this.setShowLabel()
         }
       },
       created () {
         this.setShowLabel()
+        if (this.showCheckbox) {
+          this.lazy = false
+        } else {
+          this.lazy = true
+        }
       }
     }
 </script>

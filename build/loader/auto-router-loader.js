@@ -93,17 +93,21 @@ function merge (json1, json2) {
     obj.routes = mergeArr(json1.routes, json2.routes)
   }
   return obj
-  // const webmerge = require('webpack-merge')g
   function mergeArr (arr1, arr2) {
     let arr = []
     for (let item1 of arr1) {
+      let nohas = true
       for (let item2 of arr2) {
         if (item1.path === item2.path) {
+          nohas = false
           if (item1.children && item2.children) {
             item2.children = mergeArr(item1.children, item2.children)
           }
           arr.push(Object.assign(item1, item2))
         }
+      }
+      if (nohas) {
+        arr.push(item1)
       }
     }
     return arr
