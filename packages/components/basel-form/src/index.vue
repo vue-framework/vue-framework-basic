@@ -34,6 +34,16 @@
     display:inline-block;
     vertical-align: top;
   }
+  .basel-form .clause{
+    text-align: center;
+    display: block;
+  }
+  .basel-form .prompt{
+    color:#ccc;
+  } 
+  .basel-form .el-radio,.basel-form .el-checkbox{
+    margin-left:10px;
+  }
 </style>
 <script>
   var form = {
@@ -159,6 +169,20 @@
               child.push(< div class='title' > < span / > {
                 item.value
               } < /div>)
+            } else if (item.tag === 'clause') {
+              let value = c.props.value[item.prop]
+              let input = function (value) {
+                c.props.value[item.prop] = value
+              }
+              child.push(h('el-checkbox', {
+                class: 'clause',
+                props: {
+                  value: value
+                },
+                on: {
+                  input: input
+                }
+              }, [item.temp, <a href={item.href} target='_blank'>{item.a}</a>]))
             } else if (item.tag === 'button') {
               let btns = []
               for (let i = 0; i < item.value.length; i++) {
@@ -203,9 +227,11 @@
       function getItem (item) {
         let value = c.props.value[item.prop]
         let rule = c.props.props.rules && c.props.props.rules[item.prop]
+        let prompt = h('span', {class: 'prompt'}, item.prompt)
         let input = function (value) {
           c.props.value[item.prop] = value
         }
+  
         if (~Object.keys(form).indexOf(item.tag)) {
           let tag = form[item.tag].tag
           let bind = merge(item.bind, {
@@ -223,7 +249,7 @@
           if (rule && rule.max && ~['text', 'textarea'].indexOf(item.tag)) {
             return [h(tag, bind, ''), h('span', {class: 'max-num'}, value.length + '/' + rule.max)]
           }
-          return [h(tag, bind, '')]
+          return [h(tag, bind, ''), prompt]
         }
         if (item.tag === 'tree') {
           let bind = merge(item.bind, {
@@ -243,7 +269,7 @@
               }
             }
           })
-          return [h('el-tree', bind, '')]
+          return [h('el-tree', bind, ''), prompt]
         }
         if (item.tag === 'select') {
           let children = []
@@ -266,7 +292,7 @@
                 on: {
                   input: input
                 }
-              }), children)]
+              }), children), prompt]
         }
         if (item.tag === 'radio' || item.tag === 'checkbox') {
           let children = []
@@ -278,7 +304,7 @@
               props: Object.assign({}, opt, {
                 label: opt.value
               })
-            }, opt.label))
+            }, opt.label), prompt)
           }
           return [h(`el-${item.tag}-group`,
               merge(item.bind, {
@@ -288,7 +314,7 @@
                 on: {
                   input: input
                 }
-              }), children)]
+              }), children), prompt]
         }
         if (item.tag === 'upload') {
           let tag = 'el-upload'
@@ -318,7 +344,7 @@
           })
           return [h(tag, bind, [h('i', {
             class: ['el-icon-plus']
-          }, '')])]
+          }, '')]), prompt]
         }
       }
     }

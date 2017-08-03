@@ -201,6 +201,13 @@
            }
          },
          {
+           tag: 'clause',
+           temp: '阅读并接受',
+           prop: 'ok',
+           a: '《注册协议》',
+           href: 'https://github.com/vue-framework/vue-framework-basic'
+         },
+         {
            tag: 'button',
            left: '150px', // 无就居中
            value: [
@@ -219,6 +226,7 @@
          }
        ],
        value: {
+         ok: false,
          tree: [],
          text: '123123',
          textarea: '',

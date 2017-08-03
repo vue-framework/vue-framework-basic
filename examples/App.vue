@@ -13,24 +13,27 @@
   width:100%;
   height:100%;
   overflow: auto;
-  padding:10px;
   box-sizing: border-box;
+}
+.breadcrumb{
+  padding: 10px;
 }
 </style>
 <template>
   <layout-fixed-fixedauto :leftWidth="leftWidth">
     <el-menu slot="top" mode="horizontal">
-      <el-menu-item class="f-right" :index="index+''" :key="index" v-for="(val, key, index) in header">
+      <el-menu-item class="f-right" v-for="(val, key, index) in header"  :index="index+''" :key="index" >
         <router-link :to="key">{{val}}</router-link>
       </el-menu-item>
     </el-menu>
     <bas-left-nav slot="left" v-bind="leftNav" @select-menu="selectNav" @hide-thumbnail="toggleNav">
     </bas-left-nav>
     <div slot="right" class="wrap">
-      <div> 
-          <template  v-for="item in $route.matched" v-if="false">
-            <router-link :to="item.path">{{item.meta.name}}</router-link>/
-          </template>
+      <div class="breadcrumb"> 
+          <el-breadcrumb separator="/"> 
+                  <el-breadcrumb-item v-for="(item, index) in $route.matched" :key="index" :to="{ path: item.path }">{{item.meta.name}}</el-breadcrumb-item>
+             
+          </el-breadcrumb>
       </div>
       <router-view></router-view>
     </div>
@@ -64,6 +67,13 @@
       }
     },
     created () {
+      let that = this
+      setTimeout(function () {
+        console.log(that.$route)
+        console.log(that)
+      }, 100)
+  
+      console.log(this.$router)
       // this.leftNav.logo = this.utils.iconSVG('icon-biaoqing')
       // this.leftNav.toggle = this.utils.iconSVG('icon-fenlei1')
     }

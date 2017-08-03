@@ -5,13 +5,19 @@ import leftNav from './basel-left-nav'
 import form from './basel-form'
 import address from './basel-address'
 import table from './basel-table'
+import tree from './basel-tree'
+import progress from './basel-progress'
+import editTable from './basel-edit-table'
 const components = [
   RichEditor,
   inputTree,
   leftNav,
   address,
   table,
-  form
+  form,
+  tree,
+  progress,
+  editTable
 ]
 
 const install = function (Vue) {
@@ -25,4 +31,4 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 };
 
-export default { install, RichEditor, inputTree, leftNav, address, form, table}
+export default { install, RichEditor, inputTree, leftNav, address, form, table, tree, progress, editTable }

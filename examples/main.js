@@ -11,6 +11,7 @@ import utils from '@utils'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 let autoRouter = require('auto-router')
+routeMeta(autoRouter.routes)
 const router = new VueRouter(autoRouter)
 // router end
 
@@ -25,3 +26,17 @@ const a = new Vue({
   render: h => h(App)
 })
 console.log(a)
+
+function routeMeta (data) {
+  console.log(1)
+  for (let i = 0; i < data.length; i++) {
+    let item = data[i]
+    if (item.title && (!item.meta || !item.meta.title)) {
+      item.meta = Object.assign({name: item.title}, item.meta)
+    }
+    if (item.children && item.children.length) {
+      routeMeta(item.children)
+    }
+  }
+  console.log(data)
+}

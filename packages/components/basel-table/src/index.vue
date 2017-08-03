@@ -22,6 +22,13 @@
 .bas-table .el-table__body-wrapper{
   overflow-y: hidden;
 }
+.bas-table .nobtn{
+  color:#ccc;
+  cursor:not-allowed;
+}
+.bas-table .confirmbtn{
+  margin-left:10px;
+}
 </style>
 <script>
   export default {
@@ -29,7 +36,8 @@
     data () {
       return {
         currentPage: 1,
-        currentSize: 10
+        currentSize: 10,
+        tabIndex: '0'
       }
     },
     props: {
@@ -37,7 +45,8 @@
       data: {},
       page: {},
       cols: {},
-      btns: {}
+      btns: {},
+      tabs: {}
     },
     methods: {
       search () {
@@ -49,16 +58,43 @@
             }
           }),
           page: this.currentPage,
-          size: this.currentSize
-  
+          size: this.currentSize,
+          tabIndex: this.tabIndex - 0
         })
       }
     },
     render (h) {
       let that = this
-      let child = [getFilters(), getButton(), getTable(), getPagination()]
+      let child = [getTabs(), getFilters(), getButton(), getTable(), getPagination()]
       return <div class='bas-table'>{child}</div>
+
+      function getTabs () {
+        if (!that.tabs || !that.tabs.length) {
+          return ''
+        }
+        return h('el-tabs', {
+          on: {
+            'tab-click': function (v) {
+              that.tabIndex = v.name
+              that.search()
+            }
+          }
+        }, getTab())
+      }
   
+      function getTab () {
+        let tabs = []
+        for (let i = 0; i < that.tabs.length; i++) {
+          let tab = that.tabs[i]
+          tabs.push(h('el-tab-pane', {
+            props: {
+              label: tab,
+              name: i + ''
+            }
+          }))
+        }
+        return tabs
+      }
       function getTable () {
         return h('el-table', {
           class: 'table',
@@ -71,24 +107,118 @@
         let column = []
         for (let i = 0; i < that.cols.length; i++) {
           let col = that.cols[i]
-          if (col.prop) {
-            column.push(<el-table-column
-              prop={col.prop}
-              label={col.label} />)
-          } else {
-            console.log(1)
-            column.push('el-table-column', {
-              props: {
-                prop: col.prop
-              },
-              scopedSlots: {
-                default: function (props) {
-                  console.log(123)
-                  console.log(props)
-                  return h('span', {}, 123123)
+          if (col.type === 'index') {
+            column.push(
+              h('el-table-column', {
+                props: {
+                  label: col.label,
+                  width: 80,
+                  sortable: col.sort
+                },
+                scopedSlots: {
+                  default: function (props) {
+                    return h('span', props.$index + 1 + (that.currentPage - 1) * that.currentSize)
+                  }
                 }
+              }))
+          } else {
+            let obj = {
+              label: col.label,
+              prop: col.prop,
+              width: col.width,
+              showOverflowTooltip: true,
+              sortable: col.sort
+            }
+            if (col.filters) {
+              obj.filters = col.filters
+              obj.filterMethod = function (value, row) {
+                return row[col.prop] === value
               }
-            }, null)
+            }
+            column.push(
+              h('el-table-column', {
+                props: obj,
+                scopedSlots: {
+                  default: function (props) {
+                    let index = props.$index + 1 + (that.currentPage - 1) * that.currentSize
+                    let temp = col.fuc && col.fuc(props.row, h, index, props.$index)
+                    if (!temp) {
+                      temp = {
+                        type: 'text',
+                        value: props.row[col.prop]
+                      }
+                    }
+                    if (temp.type === 'text') {
+                      return h('span', temp.value)
+                    }
+                    if (temp.type === 'tag') {
+                      return h('el-tag', {props: {type: temp.name}}, temp.value)
+                    }
+                    if (temp.type === 'tag') {
+                      return h('el-tag', {props: {type: temp.name}}, temp.value)
+                    }
+                    if (temp.type === 'btns') {
+                      let btns = temp.btns
+                      let arr = []
+                      for (let i = 0; i < btns.length; i++) {
+                        let btn = btns[i]
+                        if (btn.no) {
+                          arr.push(h('el-tooltip', {
+                            class: 'nobtn',
+                            props: {
+                              effect: 'dark',
+                              content: btn.no,
+                              placement: 'top'
+                            }
+                          }, [
+                            h('el-button',
+                              {
+                                props: {
+                                  type: 'text'
+                                },
+                                on: {
+                                  click: btn.click || noon
+                                }
+                              }
+                            , btn.label)
+                          ]))
+                        } else if (btn.confirm) {
+                          let child = [
+                            <p>{btn.confirm}</p>,
+                            <div style='text-align: right; margin: 0'>
+                              <el-button size='mini' type='text' onClick={function () { that.$refs['popoverStop' + index].doClose() }}>取消</el-button>
+                              <el-button type='primary' size='mini'
+                                onClick={function () {
+                                  that.$refs['popoverStop' + index].doClose()
+                                  btn.click()
+                                }}>确定</el-button>
+                            </div>,
+                            <el-button class='confirmbtn' slot='reference' type='text' >{btn.label}</el-button>]
+                          arr.push(h('el-popover', {
+                            props: {
+                              placement: 'top'
+                            },
+                            ref: 'popoverStop' + index
+                          }, child))
+                        } else {
+                          arr.push(h('el-button',
+                            {
+                              props: {
+                                type: 'text'
+                              },
+                              on: {
+                                click: btn.click
+                              }
+                            }
+                        , btn.label))
+                        }
+                      }
+                      return arr
+                    }
+                    return temp
+                  }
+                }
+              }))
           }
         }
         return column
@@ -124,7 +254,7 @@
                 icon: btn.icon || ''
               },
               on: {
-                click: btn.click || function () {}
+                click: btn.click || noon
               }
             })
             btns.push(h('el-button', bind, btn.label || ''))
@@ -227,4 +357,5 @@ function merge () {
       return Object.assign({}, obj1, obj)
     }
 }
+function noon () {}
 </script>

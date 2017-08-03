@@ -18,6 +18,12 @@
       "component": "resolve => require(['./pages/components/index.vue'], resolve) ",
       "children": [
         {
+          "path": "editTable",
+          "component": "resolve => require(['./pages/components/editTable/index.vue'], resolve) ",
+          "title": "编辑表格",
+          "iconSVG": "icon-tupian"
+        },
+        {
           "path": "form",
           "component": "resolve => require(['./pages/components/form/index.vue'], resolve) ",
           "title": "表单",
@@ -27,9 +33,12 @@
           "path": "inputTree",
           "component": "resolve => require(['./pages/components/inputTree/index.vue'], resolve) ",
           "title": "下拉树",
-          "meta": {
-            "name": "下拉树"
-          },
+          "iconSVG": "icon-tupian"
+        },
+        {
+          "path": "progress",
+          "component": "resolve => require(['./pages/components/progress/index.vue'], resolve) ",
+          "title": "数字进度",
           "iconSVG": "icon-tupian"
         },
         {
@@ -39,9 +48,6 @@
           "title": "表格"
         }
       ],
-      "meta": {
-        "name": "组件"
-      },
       "title": "组件"
     },
     {
@@ -56,6 +62,11 @@
           "path": "powerFull",
           "component": "resolve => require(['./pages/layout/powerFull/index.vue'], resolve) ",
           "title": "flex布局"
+        },
+        {
+          "path": "powerFullasda",
+          "title": "flex布局asd",
+          "component": "resolve => require(['./pages/layout/powerFullasda/index.vue'], resolve) "
         }
       ],
       "title": "布局"
@@ -68,15 +79,9 @@
           "path": "table",
           "component": "resolve => require(['./pages/systemDemo/table/index.vue'], resolve) ",
           "title": "图表类",
-          "iconSVG": "icon-rili",
-          "meta": {
-            "name": "图表类"
-          }
+          "iconSVG": "icon-rili"
         }
       ],
-      "meta": {
-        "name": "系统案例"
-      },
       "title": "系统案例",
       "iconSVG": "icon-fasong"
     },
