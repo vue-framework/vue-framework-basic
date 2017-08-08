@@ -29,6 +29,9 @@
 .bas-table .confirmbtn{
   margin-left:10px;
 }
+.bas-table *+.el-dropdown{
+  margin-left:10px;
+}
 </style>
 <script>
   export default {
@@ -248,16 +251,39 @@
         if (that.btns) {
           for (let i = 0; i < that.btns.length; i++) {
             let btn = that.btns[i]
-            let bind = merge(btn.bind, {
-              props: {
-                type: btn.type || 'primary',
-                icon: btn.icon || ''
-              },
-              on: {
-                click: btn.click || noon
+  
+            if (btn.option) {
+              let item = []
+              for (let i = 0; i < btn.option.length; i++) {
+                item.push(<el-dropdown-item command={btn.option[i]} >{btn.option[i]}</el-dropdown-item>)
               }
-            })
-            btns.push(h('el-button', bind, btn.label || ''))
+              btns.push(h('el-dropdown', {
+                on: {
+                  command: btn.command || noon
+                },
+                props: {
+                  trigger: 'click'
+                }
+              }, [
+                (<el-button type='primary'>
+                  {btn.label}<i class='el-icon-caret-bottom el-icon--right' />
+                </el-button>),
+              (<el-dropdown-menu slot='dropdown'>
+                {item}
+              </el-dropdown-menu>)
+              ]))
+            } else {
+              let bind = merge(btn.bind, {
+                props: {
+                  type: btn.type || 'primary',
+                  icon: btn.icon || ''
+                },
+                on: {
+                  click: btn.click || noon
+                }
+              })
+              btns.push(h('el-button', bind, btn.label || ''))
+            }
           }
         }
         if (btns.length) {

@@ -50,13 +50,44 @@
   .bas-tree .add-input{
     display:block;
   }
+  .bas-tree .search{
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .bas-tree .search .el-icon-search{
+    right: 16px;
+  }
+   .bas-tree .name{
+    height: 36px;
+    line-height: 36px;
+    background: #e5e9f2;
+    padding-left: 15px;
+    font-size: 12px;
+   }
+   .bas-tree .name .el-icon-plus{
+     float:right;
+    margin: 11px 16px 0 0;
+    color: #8990A2;
+    cursor: pointer;
+   }
 </style>
 <template>
   <div class="bas-tree">
     <div class="title">{{title}}</div>
-    <el-input placeholder="输入关键字进行过滤" v-model="filterText">
+    <el-input class="search" placeholder="输入关键字进行过滤" v-model="filterText" icon="search">
     </el-input>
-    <el-tree class="tree" @node-click="treeClick" :expand-on-click-node="false" :render-content="renderContent" :data="treeData" default-expand-all :props="defaultProps" :filter-node-method="filterNode" ref="tree">
+    <div class="name" @click="treeClick()">{{name}}<i class="el-icon-plus" @click.stop="showGround" title="点击“+”按钮 即可添加分组"></i></div>
+    <div>
+      <el-input
+          v-show="show ==='addnew'"
+          placeholder=""
+          icon="check"
+          v-model="addValue"
+          :on-icon-click="append">
+      </el-input>
+    </div>
+    <el-tree class="tree" :node-key="props.nodeKey" @node-click="treeClick" :expand-on-click-node="true" :render-content="renderContent" :data="treeData" :props="defaultProps" :filter-node-method="filterNode" ref="tree">
     </el-tree>
     <div class="noData" v-if="noData">暂无数据</div>
   </div>
@@ -80,6 +111,10 @@
       }
     },
     methods: {
+      showGround () {
+        this.addValue = ''
+        this.show = 'addnew'
+      },
       treeClick (data, node, item) {
         this.$emit('node-click', data, node, item)
       },
@@ -95,14 +130,14 @@
         return is
       },
       itRemove (store, data) {
-        let that = this
         this.remove(data).then(
           function () {
-            remove(that.data, data)
+            store.remove(data)
           }, this.err
         )
       },
       addInput (store, data) {
+        this.addValue = ''
         this.show = 'add' + data.$treeNodeId
       },
       err (err) {
@@ -112,22 +147,33 @@
         })
       },
       append (store, data) {
+        if (!this.addValue) return false
         let that = this
         let child = this.defaultProps.children
         let parentKey = this.props.parentKey
         let nodeKey = this.props.nodeKey
         let obj = {}
         obj[this.props.label] = this.addValue
-        obj[parentKey] = data[nodeKey]
         obj[child] = []
+        if (data) {
+          obj[parentKey] = data[nodeKey]
+        } else {
+          console.log(store, data)
+          obj[parentKey] = that.noParent
+        }
         this.add(obj).then(function (id) {
           obj[nodeKey] = id
-          that.data.push(obj)
+          if (data) {
+            store.append(obj, data)
+          } else {
+            that.data.push(obj)
+          }
           that.addValue = ''
           that.show = false
         }, this.err)
       },
       itEdit (store, data) {
+        if (!this.value) return false
         let that = this
         this.edit(data, this.value).then(function () {
           data[that.props.label] = that.value
@@ -142,17 +188,19 @@
           <el-input
             class='edit-input'
             value={this.value}
+            ref={'input' + data.$treeNodeId}
+            on-click={(e) => { e.stopPropagation() }}
             on-input={(v) => { this.value = v }} v-show={this.show === data.$treeNodeId} />,
-          <i class='el-icon-check' v-show={this.show === data.$treeNodeId} on-click={(e) => this.itEdit(store, data, e)} />,
+          <i class='el-icon-check' v-show={this.show === data.$treeNodeId} on-click={(e) => { this.itEdit(store, data, e); e.stopPropagation() }} />,
           <span style='float: right; margin-right: 4px'>
-            <el-tooltip class='item' effect='dark' content='添加' placement='top'>
-              <el-button size='mini' on-click={() => this.addInput(store, data)}><i class='el-icon-plus' /></el-button>
+            <el-tooltip v-show={!data.bind || !data.bind.noEdit} class='item' effect='dark' content='添加' placement='top'>
+              <el-button size='mini' on-click={(e) => { this.addInput(store, data); e.stopPropagation() }}><i class='el-icon-plus' /></el-button>
             </el-tooltip>
-            <el-tooltip class='item' effect='dark' content='编辑' placement='top'>
-              <el-button size='mini' on-click={() => { this.value = data[this.props.label]; this.show = data.$treeNodeId }}><i class='el-icon-edit' /></el-button>
+            <el-tooltip v-show={!data.bind || !data.bind.noEdit} class='item' effect='dark' content='编辑' placement='top'>
+              <el-button size='mini' on-click={(e) => { this.value = data[this.props.label]; this.show = data.$treeNodeId; e.stopPropagation() }}><i class='el-icon-edit' /></el-button>
             </el-tooltip>
-            <el-tooltip class='item' effect='dark' content='删除' placement='top'>
-              <el-button size='mini' on-click={() => this.itRemove(store, data)}><i class='el-icon-delete' /></el-button>
+            <el-tooltip v-show={!data.bind || !data.bind.noEdit} class='item' effect='dark' content='删除' placement='top'>
+              <el-button size='mini' on-click={(e) => { this.itRemove(store, data); e.stopPropagation() }}><i class='el-icon-delete' /></el-button>
             </el-tooltip>
           </span>
         ]
@@ -170,6 +218,9 @@
               on: {
                 input: (v) => {
                   this.addValue = v
+                },
+                click: (e) => {
+                  e.stopPropagation()
                 }
               },
               directives: [
@@ -194,16 +245,17 @@
       },
       treeData () {
         console.log('update')
+        let data = JSON.parse(JSON.stringify(this.data))
         let tree = []
         let map = {}
-        for (let i = 0; i < this.data.length; i++) {
-          let item = this.data[i]
+        for (let i = 0; i < data.length; i++) {
+          let item = data[i]
           let key = item[this.props.nodeKey]
           let pkey = item[this.props.parentKey]
           let obj = {}
           obj[ this.defaultProps.children ] = []
           map[key] = Object.assign(item, obj, map[key])
-          if (pkey === (this.props.noParent || 0)) {
+          if (pkey === this.noParent) {
             tree.push(item)
           } else {
             item.parent = map[pkey]
@@ -220,6 +272,9 @@
       }
     },
     props: {
+      noParent: {
+        default: 0
+      },
       remove: {
         type: Function
       },
@@ -229,6 +284,7 @@
       edit: {
         type: Function
       },
+      name: {},
       title: {},
       data: {},
       props: {
@@ -238,12 +294,6 @@
           label: 'label'
         }
       }
-    }
-  }
-  function remove (arr, item) {
-    let index = arr.indexOf(item)
-    if (~index) {
-      arr.splice(index, 1)
     }
   }
 </script>

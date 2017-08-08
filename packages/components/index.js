@@ -8,6 +8,10 @@ import table from './basel-table'
 import tree from './basel-tree'
 import progress from './basel-progress'
 import editTable from './basel-edit-table'
+import selectTag from './basel-select-tag'
+import baselPopTreeSelect from './basel-pop-tree-select'
+import excelup from './basel-excel-up'
+
 const components = [
   RichEditor,
   inputTree,
@@ -17,7 +21,10 @@ const components = [
   form,
   tree,
   progress,
-  editTable
+  editTable,
+  selectTag,
+  baselPopTreeSelect,
+  excelup
 ]
 
 const install = function (Vue) {
@@ -31,4 +38,4 @@ if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)
 };
 
-export default { install, RichEditor, inputTree, leftNav, address, form, table, tree, progress, editTable }
+export default { install, RichEditor, inputTree, leftNav, address, form, table, tree, progress, editTable, selectTag, baselPopTreeSelect, excelup }

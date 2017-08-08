@@ -24,6 +24,12 @@
           "iconSVG": "icon-tupian"
         },
         {
+          "path": "excelup",
+          "component": "resolve => require(['./pages/components/excelup/index.vue'], resolve) ",
+          "title": "excel上传",
+          "iconSVG": "icon-tupian"
+        },
+        {
           "path": "form",
           "component": "resolve => require(['./pages/components/form/index.vue'], resolve) ",
           "title": "表单",
@@ -33,6 +39,12 @@
           "path": "inputTree",
           "component": "resolve => require(['./pages/components/inputTree/index.vue'], resolve) ",
           "title": "下拉树",
+          "iconSVG": "icon-tupian"
+        },
+        {
+          "path": "poptreeselect",
+          "component": "resolve => require(['./pages/components/poptreeselect/index.vue'], resolve) ",
+          "title": "弹出选择部门人员",
           "iconSVG": "icon-tupian"
         },
         {
@@ -65,8 +77,8 @@
         },
         {
           "path": "powerFullasda",
-          "title": "flex布局asd",
-          "component": "resolve => require(['./pages/layout/powerFullasda/index.vue'], resolve) "
+          "component": "resolve => require(['./pages/layout/powerFullasda/index.vue'], resolve) ",
+          "title": "flex布局asd"
         }
       ],
       "title": "布局"

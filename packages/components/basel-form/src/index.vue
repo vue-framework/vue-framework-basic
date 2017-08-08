@@ -8,12 +8,7 @@
     display: block;
   }
   .basel-form .title>span {
-    display: inline-block;
-    width: 4px;
-    height: 21px;
-    background: #333;
-    margin-right: 8px;
-    vertical-align: text-bottom;
+    margin-left: 10px;
   }
   .basel-form .uploadHide .el-upload {
     display: none;
@@ -47,6 +42,15 @@
 </style>
 <script>
   var form = {
+    selecttag: {
+      tag: 'bas-select-tag'
+    },
+    address: {
+      tag: 'bas-address'
+    },
+    inputTree: {
+      tag: 'bas-input-tree'
+    },
     text: {
       tag: 'el-input',
       bind: {
@@ -69,12 +73,6 @@
     },
     number: {
       tag: 'el-input-number'
-    },
-    address: {
-      tag: 'bas-address'
-    },
-    inputTree: {
-      tag: 'bas-input-tree'
     },
     switch: {
       tag: 'el-switch'
@@ -166,7 +164,7 @@
           } else {
             item.hide = false
             if (item.tag === 'title') {
-              child.push(< div class='title' > < span / > {
+              child.push(< div class='title' > < span class='el-icon-document' / > {
                 item.value
               } < /div>)
             } else if (item.tag === 'clause') {
@@ -224,9 +222,21 @@
         }
         return child
       }
+      // tag标签中包含的input slot信息
+      function getSlot (slots) {
+        if (!slots) return null
+        let arr = []
+        console.log(slots)
+        for (let key in slots) {
+          arr.push(<template slot={key}>{slots[key]}</template>)
+        }
+  
+        return arr
+      }
       function getItem (item) {
         let value = c.props.value[item.prop]
         let rule = c.props.props.rules && c.props.props.rules[item.prop]
+        // 最下面的提示信息
         let prompt = h('span', {class: 'prompt'}, item.prompt)
         let input = function (value) {
           c.props.value[item.prop] = value
@@ -247,9 +257,9 @@
           },
           form[item.tag].bind)
           if (rule && rule.max && ~['text', 'textarea'].indexOf(item.tag)) {
-            return [h(tag, bind, ''), h('span', {class: 'max-num'}, value.length + '/' + rule.max)]
+            return [h(tag, bind, getSlot(item.slots)), h('span', {class: 'max-num'}, value.length + '/' + rule.max)]
           }
-          return [h(tag, bind, ''), prompt]
+          return [h(tag, bind, getSlot(item.slots)), prompt]
         }
         if (item.tag === 'tree') {
           let bind = merge(item.bind, {

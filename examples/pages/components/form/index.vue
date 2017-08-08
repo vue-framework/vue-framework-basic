@@ -7,6 +7,7 @@
 </template>
 <script>
  import json from './bas-input-tree-data.js'
+ let index = 3
  export default {
    data () {
      return {
@@ -17,7 +18,6 @@
            text: {
              trigger: 'change',
              message: '最多5个字',
-             max: 50,
              min: 2,
              required: true
            },
@@ -41,7 +41,10 @@
          {
            tag: 'text',
            label: '输入框',
-           prop: 'text'
+           prop: 'text',
+           slots: {
+             append: '万元'
+           }
          },
          {
            tag: 'title',
@@ -51,6 +54,22 @@
            tag: 'textarea',
            label: '文本域',
            prop: 'textarea'
+         },
+         {
+           tag: 'selecttag',
+           label: '已经选择标签',
+           prop: 'selecttag',
+           bind: {
+             on: {
+               add: () => {
+                 this.value.selecttag.push(
+                   {
+                     value: index++,
+                     label: '标签' + index
+                   })
+               }
+             }
+           }
          },
          {
            tag: 'title',
@@ -245,6 +264,16 @@
          datetime: '',
          color: '#20a0ff',
          transfer: [1],
+         selecttag: [
+           {
+             value: '1',
+             label: '标签一'
+           },
+           {
+             value: '2',
+             label: '标签二'
+           }
+         ],
          fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
        }
      }

@@ -14,7 +14,7 @@
 <template> 
   <div class="page"> 
     <div class="left">
-    <bas-tree @node-click="treeClick"  :data="tree" :props="props" name="XXX公司" title="公司部门" :remove="remove" :add="add" :edit="edit"></bas-tree>
+    <bas-tree @node-click="treeClick"  :data="tree" :props="props" title="公司部门" :remove="remove" :add="add" :edit="edit"></bas-tree>
     </div>
     <div class="right">
     <bas-table :tabs="tabs" :filters="filters" @search="search" :page="page" :data="data" :cols="cols" :btns='btns'></bas-table>
@@ -46,13 +46,6 @@ export default {
             type: 'default',
             click: () => {
               console.log(this)
-            }
-          },
-          {
-            label: '下拉新增',
-            option: ['黄金糕', '狮子头'],
-            command: (v) => {
-              window.alert(v)
             }
           }
         ],
@@ -178,8 +171,7 @@ export default {
       remove () {
         return new Promise(function (resolve, reject) {
           setTimeout(function () {
-            // reject(new Error('删除失败'))
-            resolve()
+            reject(new Error('删除失败'))
           }, 1000)
         })
       },
@@ -203,13 +195,10 @@ export default {
 let tree = [
     {
       'depId': 0,
+      'partnerId': 58,
       'parentId': 0,
       'departName': '未分配部门',
-      'bind': {
-        'noEdit': true,
-        'noAdd': true,
-        'noRemove': true
-      }
+      'status': 1
     },
     {
       'gmtModified': '2017-07-06T10:31:32+08:00',
